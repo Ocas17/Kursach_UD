@@ -1,0 +1,9 @@
+port: "8000"
+
+db:
+  host:  "localhost"  
+  port:  "5436"
+  username: "root"
+  dbname: postgres
+  sslmode: "disable"
+  # LOC=bd and port=5432

@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insurance Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-top: none;
+        }
+        .active-content {
+            display: block;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        input, select, button {
+            margin: 5px 0;
+            padding: 8px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .section h3 {
+            margin-top: 0;
+        }
+        .error {
+            color: red;
+            margin: 10px 0;
+        }
+        .success {
+            color: green;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Insurance Management System</h1>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="openTab('clients')">Clients</div>
+            <div class="tab" onclick="openTab('policies')">Policies</div>
+            <div class="tab" onclick="openTab('claims')">Claims</div>
+        </div>
+        
+        <!-- Clients Tab -->
+        <div id="clients" class="tab-content active-content">
+            <div class="section">
+                <h3>Create New Client</h3>
+                <form id="create-client-form">
+                    <input type="text" id="client-fullname" placeholder="Full Name" required>
+                    <input type="email" id="client-email" placeholder="Email" required>
+                    <input type="text" id="client-phone" placeholder="Phone" required>
+                    <button type="submit">Create Client</button>
+                </form>
+                <div id="create-client-result"></div>
+            </div>
+            
+            <div class="section">
+                <h3>All Clients</h3>
+                <button onclick="loadClients()">Refresh Client List</button>
+                <div id="clients-list">
+                    <table id="clients-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>Update Client</h3>
+                <form id="update-client-form">
+                    <input type="number" id="update-client-id" placeholder="Client ID" required>
+                    <input type="text" id="update-client-fullname" placeholder="Full Name">
+                    <input type="email" id="update-client-email" placeholder="Email">
+                    <input type="text" id="update-client-phone" placeholder="Phone">
+                    <button type="submit">Update Client</button>
+                </form>
+                <div id="update-client-result"></div>
+            </div>
+            
+            <div class="section">
+                <h3>Delete Client</h3>
+                <form id="delete-client-form">
+                    <input type="number" id="delete-client-id" placeholder="Client ID" required>
+                    <button type="submit">Delete Client</button>
+                </form>
+                <div id="delete-client-result"></div>
+            </div>
+        </div>
+        
+        <!-- Policies Tab -->
+        <div id="policies" class="tab-content">
+            <div class="section">
+                <h3>Create New Policy</h3>
+                <form id="create-policy-form">
+                    <input type="number" id="policy-client-id" placeholder="Client ID" required>
+                    <input type="text" id="policy-type" placeholder="Type (e.g., auto, health)" required>
+                    <input type="date" id="policy-start-date" required>
+                    <input type="date" id="policy-end-date" required>
+                    <input type="number" id="policy-price" placeholder="Price" step="0.01" required>
+                    <select id="policy-is-active">
+                        <option value="true">Active</option>
+                        <option value="false">Inactive</option>
+                    </select>
+                    <button type="submit">Create Policy</button>
+                </form>
+                <div id="create-policy-result"></div>
+            </div>
+            
+            <div class="section">
+                <h3>Get Client Policies</h3>
+                <form id="get-policies-form">
+                    <input type="number" id="get-policies-client-id" placeholder="Client ID" required>
+                    <button type="submit">Get Policies</button>
+                </form>
+                <div id="policies-list">
+                    <table id="policies-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Client ID</th>
+                                <th>Type</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Price</th>
+                                <th>Active</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>Update Policy</h3>
+                <form id="update-policy-form">
+                    <input type="number" id="update-policy-id" placeholder="Policy ID" required>
+                    <input type="text" id="update-policy-type" placeholder="Type">
+                    <input type="date" id="update-policy-start-date">
+                    <input type="date" id="update-policy-end-date">
+                    <input type="number" id="update-policy-price" placeholder="Price" step="0.01">
+                    <select id="update-policy-is-active">
+                        <option value="">Select status</option>
+                        <option value="true">Active</option>
+                        <option value="false">Inactive</option>
+                    </select>
+                    <button type="submit">Update Policy</button>
+                </form>
+                <div id="update-policy-result"></div>
+            </div>
+            
+            <div class="section">
+                <h3>Delete Policy</h3>
+                <form id="delete-policy-form">
+                    <input type="number" id="delete-policy-id" placeholder="Policy ID" required>
+                    <button type="submit">Delete Policy</button>
+                </form>
+                <div id="delete-policy-result"></div>
+            </div>
+        </div>
+        
+        <!-- Claims Tab -->
+        <div id="claims" class="tab-content">
+            <div class="section">
+                <h3>Create New Claim</h3>
+                <form id="create-claim-form">
+                    <input type="number" id="claim-policy-id" placeholder="Policy ID" required>
+                    <input type="date" id="claim-incident-date" required>
+                    <textarea id="claim-description" placeholder="Description" required></textarea>
+                    <select id="claim-status">
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                    <button type="submit">Create Claim</button>
+                </form>
+                <div id="create-claim-result"></div>
+            </div>
+            
+            <div class="section">
+                <h3>Get Policy Claims</h3>
+                <form id="get-claims-form">
+                    <input type="number" id="get-claims-policy-id" placeholder="Policy ID" required>
+                    <button type="submit">Get Claims</button>
+                </form>
+                <div id="claims-list">
+                    <table id="claims-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Policy ID</th>
+                                <th>Incident Date</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>Update Claim</h3>
+                <form id="update-claim-form">
+                    <input type="number" id="update-claim-id" placeholder="Claim ID" required>
+                    <input type="date" id="update-claim-incident-date">
+                    <textarea id="update-claim-description" placeholder="Description"></textarea>
+                    <select id="update-claim-status">
+                        <option value="">Select status</option>
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                    <button type="submit">Update Claim</button>
+                </form>
+                <div id="update-claim-result"></div>
+            </div>
+            
+            <div class="section">
+                <h3>Delete Claim</h3>
+                <form id="delete-claim-form">
+                    <input type="number" id="delete-claim-id" placeholder="Claim ID" required>
+                    <button type="submit">Delete Claim</button>
+                </form>
+                <div id="delete-claim-result"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API URL - убираем конечный слеш, чтобы избежать редиректов
+        const API_URL = 'http://localhost:8000/api';
+        
+        // Tab functionality
+        function openTab(tabName) {
+            const tabs = document.getElementsByClassName("tab");
+            const tabContents = document.getElementsByClassName("tab-content");
+            
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+                tabContents[i].classList.remove("active-content");
+            }
+            
+            document.getElementById(tabName).classList.add("active-content");
+            
+            for (let i = 0; i < tabs.length; i++) {
+                if (tabs[i].textContent.toLowerCase() === tabName) {
+                    tabs[i].classList.add("active");
+                }
+            }
+        }
+        
+        // --------- Client Functions ---------
+        
+        // Load all clients
+        function loadClients() {
+            fetch(`${API_URL}/clients`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: 'omit'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const tbody = document.querySelector("#clients-table tbody");
+                tbody.innerHTML = "";
+                
+                if (!Array.isArray(data)) {
+                    console.error('Expected array but received:', data);
+                    data = [];
+                }
+                
+                data.forEach(client => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${client.id}</td>
+                        <td>${client.full_name}</td>
+                        <td>${client.email}</td>
+                        <td>${client.phone}</td>
+                        <td>
+                            <button onclick="loadClientPolicies(${client.id})">View Policies</button>
+                            <button onclick="deleteClient(${client.id})">Delete</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('Error loading clients:', error);
+                document.querySelector("#clients-table tbody").innerHTML = 
+                    `<tr><td colspan="5">Error loading clients: ${error.message}</td></tr>`;
+            });
+        }
+        
+        // Create client form handler
+        document.getElementById("create-client-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const fullName = document.getElementById("client-fullname").value;
+            const email = document.getElementById("client-email").value;
+            const phone = document.getElementById("client-phone").value;
+            
+            fetch(`${API_URL}/clients`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: 'omit',
+                body: JSON.stringify({
+                    full_name: fullName,
+                    email: email,
+                    phone: phone
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById("create-client-result").innerHTML = 
+                    `<div class="success">Client created successfully with ID: ${data.id}</div>`;
+                loadClients();
+                this.reset();
+            })
+            .catch(error => {
+                document.getElementById("create-client-result").innerHTML = 
+                    `<div class="error">Error: ${error.message}</div>`;
+            });
+        });
+        
+        // Update client form handler
+        document.getElementById("update-client-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const clientId = document.getElementById("update-client-id").value;
+            const updateData = {};
+            
+            const fullName = document.getElementById("update-client-fullname").value;
+            const email = document.getElementById("update-client-email").value;
+            const phone = document.getElementById("update-client-phone").value;
+            
+            if (fullName) updateData.full_name = fullName;
+            if (email) updateData.email = email;
+            if (phone) updateData.phone = phone;
+            
+            fetch(`${API_URL}/clients/${clientId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: 'omit',
+                body: JSON.stringify(updateData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById("update-client-result").innerHTML = 
+                    `<div class="success">Client updated successfully</div>`;
+                loadClients();
+                this.reset();
+            })
+            .catch(error => {
+                document.getElementById("update-client-result").innerHTML = 
+                    `<div class="error">Error: ${error.message}</div>`;
+            });
+        });
+        
+        // Delete client function
+        function deleteClient(id) {
+            if (confirm("Are you sure you want to delete this client?")) {
+                fetch(`${API_URL}/clients/${id}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    credentials: 'omit'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    alert("Client deleted successfully");
+                    loadClients();
+                })
+                .catch(error => {
+                    alert(`Error deleting client: ${error.message}`);
+                });
+            }
+        }
+        
+        document.getElementById("delete-client-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const clientId = document.getElementById("delete-client-id").value;
+            deleteClient(clientId);
+        });
+        
+        // --------- Policy Functions ---------
+        
+        // Load policies for a client
+        function loadClientPolicies(clientId) {
+            fetch(`${API_URL}/clients/${clientId}/policies`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: 'omit'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const tbody = document.querySelector("#policies-table tbody");
+                tbody.innerHTML = "";
+                
+                if (!Array.isArray(data)) {
+                    console.error('Expected array but received:', data);
+                    data = [];
+                }
+                
+                data.forEach(policy => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${policy.id}</td>
+                        <td>${policy.client_id}</td>
+                        <td>${policy.type}</td>
+                        <td>${formatDate(policy.start_date)}</td>
+                        <td>${formatDate(policy.end_date)}</td>
+                        <td>${policy.price}</td>
+                        <td>${policy.is_active ? "Yes" : "No"}</td>
+                        <td>
+                            <button onclick="loadPolicyClaims(${policy.id})">View Claims</button>
+                            <button onclick="deletePolicy(${policy.id})">Delete</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+                
+                // Switch to policies tab
+                openTab("policies");
+                // Fill the form with the client ID
+                document.getElementById("get-policies-client-id").value = clientId;
+            })
+            .catch(error => {
+                console.error('Error loading policies:', error);
+                document.querySelector("#policies-table tbody").innerHTML = 
+                    `<tr><td colspan="8">Error loading policies: ${error.message}</td></tr>`;
+            });
+        }
+        
+        // Get policies form handler
+        document.getElementById("get-policies-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const clientId = document.getElementById("get-policies-client-id").value;
+            loadClientPolicies(clientId);
+        });
+        
+        // Helper function to format date for API
+        function formatDateForAPI(dateString) {
+            if (!dateString) return null;
+            
+            // Парсим дату из введенного значения
+            const date = new Date(dateString);
+            
+            // Форматируем в строгом формате RFC3339, который ожидает Go
+            // Формат: "2006-01-02T15:04:05Z" (пример: "2023-05-15T00:00:00Z")
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            
+            // Возвращаем в формате "2023-05-15T00:00:00Z"
+            return `${year}-${month}-${day}T00:00:00Z`;
+        }
+        
+        // Create policy form handler
+        document.getElementById("create-policy-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const clientId = document.getElementById("policy-client-id").value;
+            const type = document.getElementById("policy-type").value;
+            const startDate = document.getElementById("policy-start-date").value;
+            const endDate = document.getElementById("policy-end-date").value;
+            const price = document.getElementById("policy-price").value;
+            const isActive = document.getElementById("policy-is-active").value === "true";
+            
+            const requestData = {
+                client_id: parseInt(clientId),
+                type: type,
+                start_date: formatDateForAPI(startDate),
+                end_date: formatDateForAPI(endDate),
+                price: parseFloat(price),
+                is_active: isActive
+            };
+            
+            console.log("Sending policy data:", requestData);
+            
+            fetch(`${API_URL}/clients/${clientId}/policies`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: 'omit',
+                body: JSON.stringify(requestData)
+            })
+            .then(response => {
+                console.log("Policy create response status:", response.status);
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        console.error("Error response body:", text);
+                        throw new Error(`HTTP error! Status: ${response.status}, Message: ${text || "Unknown error"}`);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Policy created successfully:", data);
+                document.getElementById("create-policy-result").innerHTML = 
+                    `<div class="success">Policy created successfully with ID: ${data.id}</div>`;
+                loadClientPolicies(clientId);
+                this.reset();
+            })
+            .catch(error => {
+                console.error("Policy creation error:", error);
+                document.getElementById("create-policy-result").innerHTML = 
+                    `<div class="error">Error: ${error.message}</div>`;
+            });
+        });
+        
+        // Update policy form handler
+        document.getElementById("update-policy-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const policyId = document.getElementById("update-policy-id").value;
+            const updateData = {};
+            
+            const type = document.getElementById("update-policy-type").value;
+            const startDate = document.getElementById("update-policy-start-date").value;
+            const endDate = document.getElementById("update-policy-end-date").value;
+            const price = document.getElementById("update-policy-price").value;
+            const isActive = document.getElementById("update-policy-is-active").value;
+            
+            if (type) updateData.type = type;
+            if (startDate) updateData.start_date = formatDateForAPI(startDate);
+            if (endDate) updateData.end_date = formatDateForAPI(endDate);
+            if (price) updateData.price = parseFloat(price);
+            if (isActive) updateData.is_active = isActive === "true";
+            
+            console.log("Sending policy update data:", updateData);
+            
+            fetch(`${API_URL}/policies/${policyId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: 'omit',
+                body: JSON.stringify(updateData)
+            })
+            .then(response => {
+                console.log("Policy update response status:", response.status);
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        console.error("Error response body:", text);
+                        throw new Error(`HTTP error! Status: ${response.status}, Message: ${text || "Unknown error"}`);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Policy updated successfully:", data);
+                document.getElementById("update-policy-result").innerHTML = 
+                    `<div class="success">Policy updated successfully</div>`;
+                this.reset();
+            })
+            .catch(error => {
+                console.error("Policy update error:", error);
+                document.getElementById("update-policy-result").innerHTML = 
+                    `<div class="error">Error: ${error.message}</div>`;
+            });
+        });
+        
+        // Delete policy function
+        function deletePolicy(id) {
+            if (confirm("Are you sure you want to delete this policy?")) {
+                fetch(`${API_URL}/policies/${id}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    credentials: 'omit'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    alert("Policy deleted successfully");
+                })
+                .catch(error => {
+                    alert(`Error deleting policy: ${error.message}`);
+                });
+            }
+        }
+        
+        document.getElementById("delete-policy-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const policyId = document.getElementById("delete-policy-id").value;
+            deletePolicy(policyId);
+        });
+        
+        // --------- Claim Functions ---------
+        
+        // Load claims for a policy
+        function loadPolicyClaims(policyId) {
+            fetch(`${API_URL}/policies/${policyId}/claims`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: 'omit'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const tbody = document.querySelector("#claims-table tbody");
+                tbody.innerHTML = "";
+                
+                if (!Array.isArray(data)) {
+                    console.error('Expected array but received:', data);
+                    data = [];
+                }
+                
+                data.forEach(claim => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${claim.id}</td>
+                        <td>${claim.policy_id}</td>
+                        <td>${formatDate(claim.incident_date)}</td>
+                        <td>${claim.description}</td>
+                        <td>${claim.status}</td>
+                        <td>
+                            <button onclick="deleteClaim(${claim.id})">Delete</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+                
+                // Switch to claims tab
+                openTab("claims");
+                // Fill the form with the policy ID
+                document.getElementById("get-claims-policy-id").value = policyId;
+            })
+            .catch(error => {
+                console.error('Error loading claims:', error);
+                document.querySelector("#claims-table tbody").innerHTML = 
+                    `<tr><td colspan="6">Error loading claims: ${error.message}</td></tr>`;
+            });
+        }
+        
+        // Get claims form handler
+        document.getElementById("get-claims-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const policyId = document.getElementById("get-claims-policy-id").value;
+            loadPolicyClaims(policyId);
+        });
+        
+        // Create claim form handler
+        document.getElementById("create-claim-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const policyId = document.getElementById("claim-policy-id").value;
+            const incidentDate = document.getElementById("claim-incident-date").value;
+            const description = document.getElementById("claim-description").value;
+            const status = document.getElementById("claim-status").value;
+            
+            const requestData = {
+                policy_id: parseInt(policyId),
+                incident_date: formatDateForAPI(incidentDate),
+                description: description,
+                status: status
+            };
+            
+            console.log("Sending claim data:", requestData);
+            
+            fetch(`${API_URL}/policies/${policyId}/claims`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: 'omit',
+                body: JSON.stringify(requestData)
+            })
+            .then(response => {
+                console.log("Claim create response status:", response.status);
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        console.error("Error response body:", text);
+                        throw new Error(`HTTP error! Status: ${response.status}, Message: ${text || "Unknown error"}`);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Claim created successfully:", data);
+                document.getElementById("create-claim-result").innerHTML = 
+                    `<div class="success">Claim created successfully with ID: ${data.id}</div>`;
+                loadPolicyClaims(policyId);
+                this.reset();
+            })
+            .catch(error => {
+                console.error("Claim creation error:", error);
+                document.getElementById("create-claim-result").innerHTML = 
+                    `<div class="error">Error: ${error.message}</div>`;
+            });
+        });
+        
+        // Update claim form handler
+        document.getElementById("update-claim-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const claimId = document.getElementById("update-claim-id").value;
+            const updateData = {};
+            
+            const incidentDate = document.getElementById("update-claim-incident-date").value;
+            const description = document.getElementById("update-claim-description").value;
+            const status = document.getElementById("update-claim-status").value;
+            
+            if (incidentDate) updateData.incident_date = formatDateForAPI(incidentDate);
+            if (description) updateData.description = description;
+            if (status) updateData.status = status;
+            
+            console.log("Sending claim update data:", updateData);
+            
+            fetch(`${API_URL}/claims/${claimId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: 'omit',
+                body: JSON.stringify(updateData)
+            })
+            .then(response => {
+                console.log("Claim update response status:", response.status);
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        console.error("Error response body:", text);
+                        throw new Error(`HTTP error! Status: ${response.status}, Message: ${text || "Unknown error"}`);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Claim updated successfully:", data);
+                document.getElementById("update-claim-result").innerHTML = 
+                    `<div class="success">Claim updated successfully</div>`;
+                this.reset();
+            })
+            .catch(error => {
+                console.error("Claim update error:", error);
+                document.getElementById("update-claim-result").innerHTML = 
+                    `<div class="error">Error: ${error.message}</div>`;
+            });
+        });
+        
+        // Delete claim function
+        function deleteClaim(id) {
+            if (confirm("Are you sure you want to delete this claim?")) {
+                fetch(`${API_URL}/claims/${id}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    credentials: 'omit'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    alert("Claim deleted successfully");
+                })
+                .catch(error => {
+                    alert(`Error deleting claim: ${error.message}`);
+                });
+            }
+        }
+        
+        document.getElementById("delete-claim-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const claimId = document.getElementById("delete-claim-id").value;
+            deleteClaim(claimId);
+        });
+        
+        // Helper function to format date
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toISOString().split('T')[0];
+        }
+        
+        // Test connection when page loads
+        document.addEventListener("DOMContentLoaded", function() {
+            console.log("Testing API connection...");
+            fetch(`${API_URL}/clients`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: 'omit'
+            })
+            .then(response => {
+                console.log("API Response Status:", response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("API Response Data:", data);
+                loadClients();
+            })
+            .catch(error => {
+                console.error('API Connection Error:', error);
+                alert(`Cannot connect to API at ${API_URL}/clients\nError: ${error.message}\n\nPlease make sure the server is running.`);
+            });
+        });
+    </script>
+</body>
+</html>
