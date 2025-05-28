@@ -3,139 +3,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Insurance Management System</title>
+    <title>Система управления страхованием</title>
     <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --background-color: #ecf0f1;
+            --card-background: #ffffff;
+            --text-color: #2c3e50;
+            --border-radius: 8px;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f5f5f5;
+            background-color: var(--background-color);
+            color: var(--text-color);
         }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
         h1 {
             text-align: center;
-            color: #333;
+            color: var(--primary-color);
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 600;
         }
+
         .tabs {
             display: flex;
             margin-bottom: 20px;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 2px solid #ddd;
+            gap: 10px;
         }
+
         .tab {
-            padding: 10px 20px;
+            padding: 12px 24px;
             cursor: pointer;
-            background-color: #f1f1f1;
-            margin-right: 5px;
-            border-radius: 5px 5px 0 0;
+            background-color: transparent;
+            color: var(--text-color);
+            border: none;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 1.1em;
         }
+
+        .tab:hover {
+            color: var(--secondary-color);
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+
         .tab.active {
-            background-color: #4CAF50;
-            color: white;
+            color: var(--secondary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            background-color: transparent;
         }
+
         .tab-content {
             display: none;
             padding: 20px;
-            border: 1px solid #ddd;
-            border-top: none;
+            border-radius: var(--border-radius);
+            background-color: var(--card-background);
         }
+
         .active-content {
             display: block;
+            animation: fadeIn 0.3s ease;
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e1e1e1;
+            border-radius: var(--border-radius);
+            background-color: #f8f9fa;
+        }
+
+        .section h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.3em;
+            margin-bottom: 20px;
+        }
+
         form {
             display: flex;
             flex-direction: column;
-            margin-bottom: 20px;
+            gap: 15px;
         }
-        input, select, button {
-            margin: 5px 0;
-            padding: 8px;
+
+        input, select, textarea {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1em;
+            transition: border-color 0.3s ease;
         }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
         button {
-            background-color: #4CAF50;
+            background-color: var(--secondary-color);
             color: white;
             border: none;
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
             cursor: pointer;
-            padding: 10px;
+            font-size: 1em;
+            font-weight: 500;
+            transition: all 0.3s ease;
         }
+
         button:hover {
-            background-color: #45a049;
+            background-color: #2980b9;
+            transform: translateY(-1px);
         }
+
         table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 20px 0;
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            overflow: hidden;
         }
+
         th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-        .section {
-            margin-bottom: 30px;
             padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
         }
-        .section h3 {
-            margin-top: 0;
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 500;
         }
+
+        tr:hover {
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+
         .error {
-            color: red;
+            color: var(--danger-color);
+            padding: 10px;
+            border-radius: var(--border-radius);
+            background-color: rgba(231, 76, 60, 0.1);
             margin: 10px 0;
         }
+
         .success {
-            color: green;
+            color: var(--success-color);
+            padding: 10px;
+            border-radius: var(--border-radius);
+            background-color: rgba(46, 204, 113, 0.1);
             margin: 10px 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                width: 100%;
+                text-align: center;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Insurance Management System</h1>
+        <h1>Система управления страхованием</h1>
         
         <div class="tabs">
-            <div class="tab active" onclick="openTab('clients')">Clients</div>
-            <div class="tab" onclick="openTab('policies')">Policies</div>
-            <div class="tab" onclick="openTab('claims')">Claims</div>
+            <div class="tab active" onclick="openTab('clients')">Клиенты</div>
+            <div class="tab" onclick="openTab('policies')">Полисы</div>
+            <div class="tab" onclick="openTab('claims')">Претензии</div>
         </div>
         
         <!-- Clients Tab -->
         <div id="clients" class="tab-content active-content">
             <div class="section">
-                <h3>Create New Client</h3>
+                <h3>Создать нового клиента</h3>
                 <form id="create-client-form">
-                    <input type="text" id="client-fullname" placeholder="Full Name" required>
+                    <input type="text" id="client-fullname" placeholder="ФИО" required>
                     <input type="email" id="client-email" placeholder="Email" required>
-                    <input type="text" id="client-phone" placeholder="Phone" required>
-                    <button type="submit">Create Client</button>
+                    <input type="text" id="client-phone" placeholder="Телефон" required>
+                    <button type="submit">Создать клиента</button>
                 </form>
                 <div id="create-client-result"></div>
             </div>
             
             <div class="section">
-                <h3>All Clients</h3>
-                <button onclick="loadClients()">Refresh Client List</button>
+                <h3>Все клиенты</h3>
+                <button onclick="loadClients()">Обновить список клиентов</button>
                 <div id="clients-list">
                     <table id="clients-table">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Full Name</th>
+                                <th>ФИО</th>
                                 <th>Email</th>
-                                <th>Phone</th>
-                                <th>Actions</th>
+                                <th>Телефон</th>
+                                <th>Действия</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -144,22 +247,22 @@
             </div>
             
             <div class="section">
-                <h3>Update Client</h3>
+                <h3>Обновить клиента</h3>
                 <form id="update-client-form">
-                    <input type="number" id="update-client-id" placeholder="Client ID" required>
-                    <input type="text" id="update-client-fullname" placeholder="Full Name">
+                    <input type="number" id="update-client-id" placeholder="ID клиента" required>
+                    <input type="text" id="update-client-fullname" placeholder="ФИО">
                     <input type="email" id="update-client-email" placeholder="Email">
-                    <input type="text" id="update-client-phone" placeholder="Phone">
-                    <button type="submit">Update Client</button>
+                    <input type="text" id="update-client-phone" placeholder="Телефон">
+                    <button type="submit">Обновить клиента</button>
                 </form>
                 <div id="update-client-result"></div>
             </div>
             
             <div class="section">
-                <h3>Delete Client</h3>
+                <h3>Удалить клиента</h3>
                 <form id="delete-client-form">
-                    <input type="number" id="delete-client-id" placeholder="Client ID" required>
-                    <button type="submit">Delete Client</button>
+                    <input type="number" id="delete-client-id" placeholder="ID клиента" required>
+                    <button type="submit">Удалить клиента</button>
                 </form>
                 <div id="delete-client-result"></div>
             </div>
@@ -168,40 +271,40 @@
         <!-- Policies Tab -->
         <div id="policies" class="tab-content">
             <div class="section">
-                <h3>Create New Policy</h3>
+                <h3>Создать новый полис</h3>
                 <form id="create-policy-form">
-                    <input type="number" id="policy-client-id" placeholder="Client ID" required>
-                    <input type="text" id="policy-type" placeholder="Type (e.g., auto, health)" required>
+                    <input type="number" id="policy-client-id" placeholder="ID клиента" required>
+                    <input type="text" id="policy-type" placeholder="Тип (например, авто, здоровье)" required>
                     <input type="date" id="policy-start-date" required>
                     <input type="date" id="policy-end-date" required>
-                    <input type="number" id="policy-price" placeholder="Price" step="0.01" required>
+                    <input type="number" id="policy-price" placeholder="Стоимость" step="0.01" required>
                     <select id="policy-is-active">
-                        <option value="true">Active</option>
-                        <option value="false">Inactive</option>
+                        <option value="true">Активный</option>
+                        <option value="false">Неактивный</option>
                     </select>
-                    <button type="submit">Create Policy</button>
+                    <button type="submit">Создать полис</button>
                 </form>
                 <div id="create-policy-result"></div>
             </div>
             
             <div class="section">
-                <h3>Get Client Policies</h3>
+                <h3>Полисы клиента</h3>
                 <form id="get-policies-form">
-                    <input type="number" id="get-policies-client-id" placeholder="Client ID" required>
-                    <button type="submit">Get Policies</button>
+                    <input type="number" id="get-policies-client-id" placeholder="ID клиента" required>
+                    <button type="submit">Получить полисы</button>
                 </form>
                 <div id="policies-list">
                     <table id="policies-table">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Client ID</th>
-                                <th>Type</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Price</th>
-                                <th>Active</th>
-                                <th>Actions</th>
+                                <th>ID клиента</th>
+                                <th>Тип</th>
+                                <th>Дата начала</th>
+                                <th>Дата окончания</th>
+                                <th>Стоимость</th>
+                                <th>Активен</th>
+                                <th>Действия</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -210,28 +313,28 @@
             </div>
             
             <div class="section">
-                <h3>Update Policy</h3>
+                <h3>Обновить полис</h3>
                 <form id="update-policy-form">
-                    <input type="number" id="update-policy-id" placeholder="Policy ID" required>
-                    <input type="text" id="update-policy-type" placeholder="Type">
+                    <input type="number" id="update-policy-id" placeholder="ID полиса" required>
+                    <input type="text" id="update-policy-type" placeholder="Тип">
                     <input type="date" id="update-policy-start-date">
                     <input type="date" id="update-policy-end-date">
-                    <input type="number" id="update-policy-price" placeholder="Price" step="0.01">
+                    <input type="number" id="update-policy-price" placeholder="Стоимость" step="0.01">
                     <select id="update-policy-is-active">
-                        <option value="">Select status</option>
-                        <option value="true">Active</option>
-                        <option value="false">Inactive</option>
+                        <option value="">Выберите статус</option>
+                        <option value="true">Активный</option>
+                        <option value="false">Неактивный</option>
                     </select>
-                    <button type="submit">Update Policy</button>
+                    <button type="submit">Обновить полис</button>
                 </form>
                 <div id="update-policy-result"></div>
             </div>
             
             <div class="section">
-                <h3>Delete Policy</h3>
+                <h3>Удалить полис</h3>
                 <form id="delete-policy-form">
-                    <input type="number" id="delete-policy-id" placeholder="Policy ID" required>
-                    <button type="submit">Delete Policy</button>
+                    <input type="number" id="delete-policy-id" placeholder="ID полиса" required>
+                    <button type="submit">Удалить полис</button>
                 </form>
                 <div id="delete-policy-result"></div>
             </div>
@@ -240,37 +343,37 @@
         <!-- Claims Tab -->
         <div id="claims" class="tab-content">
             <div class="section">
-                <h3>Create New Claim</h3>
+                <h3>Создать новую претензию</h3>
                 <form id="create-claim-form">
-                    <input type="number" id="claim-policy-id" placeholder="Policy ID" required>
+                    <input type="number" id="claim-policy-id" placeholder="ID полиса" required>
                     <input type="date" id="claim-incident-date" required>
-                    <textarea id="claim-description" placeholder="Description" required></textarea>
+                    <textarea id="claim-description" placeholder="Описание" required></textarea>
                     <select id="claim-status">
-                        <option value="pending">Pending</option>
-                        <option value="approved">Approved</option>
-                        <option value="rejected">Rejected</option>
+                        <option value="pending">На рассмотрении</option>
+                        <option value="approved">Одобрено</option>
+                        <option value="rejected">Отклонено</option>
                     </select>
-                    <button type="submit">Create Claim</button>
+                    <button type="submit">Создать претензию</button>
                 </form>
                 <div id="create-claim-result"></div>
             </div>
             
             <div class="section">
-                <h3>Get Policy Claims</h3>
+                <h3>Претензии по полису</h3>
                 <form id="get-claims-form">
-                    <input type="number" id="get-claims-policy-id" placeholder="Policy ID" required>
-                    <button type="submit">Get Claims</button>
+                    <input type="number" id="get-claims-policy-id" placeholder="ID полиса" required>
+                    <button type="submit">Получить претензии</button>
                 </form>
                 <div id="claims-list">
                     <table id="claims-table">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Policy ID</th>
-                                <th>Incident Date</th>
-                                <th>Description</th>
-                                <th>Status</th>
-                                <th>Actions</th>
+                                <th>ID полиса</th>
+                                <th>Дата инцидента</th>
+                                <th>Описание</th>
+                                <th>Статус</th>
+                                <th>Действия</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -279,27 +382,27 @@
             </div>
             
             <div class="section">
-                <h3>Update Claim</h3>
+                <h3>Обновить претензию</h3>
                 <form id="update-claim-form">
-                    <input type="number" id="update-claim-id" placeholder="Claim ID" required>
+                    <input type="number" id="update-claim-id" placeholder="ID претензии" required>
                     <input type="date" id="update-claim-incident-date">
-                    <textarea id="update-claim-description" placeholder="Description"></textarea>
+                    <textarea id="update-claim-description" placeholder="Описание"></textarea>
                     <select id="update-claim-status">
-                        <option value="">Select status</option>
-                        <option value="pending">Pending</option>
-                        <option value="approved">Approved</option>
-                        <option value="rejected">Rejected</option>
+                        <option value="">Выберите статус</option>
+                        <option value="pending">На рассмотрении</option>
+                        <option value="approved">Одобрено</option>
+                        <option value="rejected">Отклонено</option>
                     </select>
-                    <button type="submit">Update Claim</button>
+                    <button type="submit">Обновить претензию</button>
                 </form>
                 <div id="update-claim-result"></div>
             </div>
             
             <div class="section">
-                <h3>Delete Claim</h3>
+                <h3>Удалить претензию</h3>
                 <form id="delete-claim-form">
-                    <input type="number" id="delete-claim-id" placeholder="Claim ID" required>
-                    <button type="submit">Delete Claim</button>
+                    <input type="number" id="delete-claim-id" placeholder="ID претензии" required>
+                    <button type="submit">Удалить претензию</button>
                 </form>
                 <div id="delete-claim-result"></div>
             </div>
@@ -363,8 +466,8 @@
                         <td>${client.email}</td>
                         <td>${client.phone}</td>
                         <td>
-                            <button onclick="loadClientPolicies(${client.id})">View Policies</button>
-                            <button onclick="deleteClient(${client.id})">Delete</button>
+                            <button onclick="loadClientPolicies(${client.id})">Просмотр полисов</button>
+                            <button onclick="deleteClient(${client.id})">Удалить</button>
                         </td>
                     `;
                     tbody.appendChild(row);
@@ -405,13 +508,13 @@
             })
             .then(data => {
                 document.getElementById("create-client-result").innerHTML = 
-                    `<div class="success">Client created successfully with ID: ${data.id}</div>`;
+                    `<div class="success">Клиент успешно создан с ID: ${data.id}</div>`;
                 loadClients();
                 this.reset();
             })
             .catch(error => {
                 document.getElementById("create-client-result").innerHTML = 
-                    `<div class="error">Error: ${error.message}</div>`;
+                    `<div class="error">Ошибка: ${error.message}</div>`;
             });
         });
         
@@ -446,19 +549,19 @@
             })
             .then(data => {
                 document.getElementById("update-client-result").innerHTML = 
-                    `<div class="success">Client updated successfully</div>`;
+                    `<div class="success">Клиент успешно обновлен</div>`;
                 loadClients();
                 this.reset();
             })
             .catch(error => {
                 document.getElementById("update-client-result").innerHTML = 
-                    `<div class="error">Error: ${error.message}</div>`;
+                    `<div class="error">Ошибка: ${error.message}</div>`;
             });
         });
         
         // Delete client function
         function deleteClient(id) {
-            if (confirm("Are you sure you want to delete this client?")) {
+            if (confirm("Вы уверены, что хотите удалить этого клиента?")) {
                 fetch(`${API_URL}/clients/${id}`, {
                     method: "DELETE",
                     headers: {
@@ -473,11 +576,11 @@
                     return response.json();
                 })
                 .then(data => {
-                    alert("Client deleted successfully");
+                    alert("Клиент успешно удален");
                     loadClients();
                 })
                 .catch(error => {
-                    alert(`Error deleting client: ${error.message}`);
+                    alert(`Ошибка при удалении клиента: ${error.message}`);
                 });
             }
         }
@@ -524,10 +627,10 @@
                         <td>${formatDate(policy.start_date)}</td>
                         <td>${formatDate(policy.end_date)}</td>
                         <td>${policy.price}</td>
-                        <td>${policy.is_active ? "Yes" : "No"}</td>
+                        <td>${policy.is_active ? "Да" : "Нет"}</td>
                         <td>
-                            <button onclick="loadPolicyClaims(${policy.id})">View Claims</button>
-                            <button onclick="deletePolicy(${policy.id})">Delete</button>
+                            <button onclick="loadPolicyClaims(${policy.id})">Просмотр претензий</button>
+                            <button onclick="deletePolicy(${policy.id})">Удалить</button>
                         </td>
                     `;
                     tbody.appendChild(row);
@@ -613,14 +716,14 @@
             .then(data => {
                 console.log("Policy created successfully:", data);
                 document.getElementById("create-policy-result").innerHTML = 
-                    `<div class="success">Policy created successfully with ID: ${data.id}</div>`;
+                    `<div class="success">Полис успешно создан с ID: ${data.id}</div>`;
                 loadClientPolicies(clientId);
                 this.reset();
             })
             .catch(error => {
                 console.error("Policy creation error:", error);
                 document.getElementById("create-policy-result").innerHTML = 
-                    `<div class="error">Error: ${error.message}</div>`;
+                    `<div class="error">Ошибка: ${error.message}</div>`;
             });
         });
         
@@ -666,19 +769,19 @@
             .then(data => {
                 console.log("Policy updated successfully:", data);
                 document.getElementById("update-policy-result").innerHTML = 
-                    `<div class="success">Policy updated successfully</div>`;
+                    `<div class="success">Полис успешно обновлен</div>`;
                 this.reset();
             })
             .catch(error => {
                 console.error("Policy update error:", error);
                 document.getElementById("update-policy-result").innerHTML = 
-                    `<div class="error">Error: ${error.message}</div>`;
+                    `<div class="error">Ошибка: ${error.message}</div>`;
             });
         });
         
         // Delete policy function
         function deletePolicy(id) {
-            if (confirm("Are you sure you want to delete this policy?")) {
+            if (confirm("Вы уверены, что хотите удалить этот полис?")) {
                 fetch(`${API_URL}/policies/${id}`, {
                     method: "DELETE",
                     headers: {
@@ -693,10 +796,10 @@
                     return response.json();
                 })
                 .then(data => {
-                    alert("Policy deleted successfully");
+                    alert("Полис успешно удален");
                 })
                 .catch(error => {
-                    alert(`Error deleting policy: ${error.message}`);
+                    alert(`Ошибка при удалении полиса: ${error.message}`);
                 });
             }
         }
@@ -741,9 +844,9 @@
                         <td>${claim.policy_id}</td>
                         <td>${formatDate(claim.incident_date)}</td>
                         <td>${claim.description}</td>
-                        <td>${claim.status}</td>
+                        <td>${translateClaimStatus(claim.status)}</td>
                         <td>
-                            <button onclick="deleteClaim(${claim.id})">Delete</button>
+                            <button onclick="deleteClaim(${claim.id})">Удалить</button>
                         </td>
                     `;
                     tbody.appendChild(row);
@@ -808,14 +911,14 @@
             .then(data => {
                 console.log("Claim created successfully:", data);
                 document.getElementById("create-claim-result").innerHTML = 
-                    `<div class="success">Claim created successfully with ID: ${data.id}</div>`;
+                    `<div class="success">Претензия успешно создана с ID: ${data.id}</div>`;
                 loadPolicyClaims(policyId);
                 this.reset();
             })
             .catch(error => {
                 console.error("Claim creation error:", error);
                 document.getElementById("create-claim-result").innerHTML = 
-                    `<div class="error">Error: ${error.message}</div>`;
+                    `<div class="error">Ошибка: ${error.message}</div>`;
             });
         });
         
@@ -857,19 +960,19 @@
             .then(data => {
                 console.log("Claim updated successfully:", data);
                 document.getElementById("update-claim-result").innerHTML = 
-                    `<div class="success">Claim updated successfully</div>`;
+                    `<div class="success">Претензия успешно обновлена</div>`;
                 this.reset();
             })
             .catch(error => {
                 console.error("Claim update error:", error);
                 document.getElementById("update-claim-result").innerHTML = 
-                    `<div class="error">Error: ${error.message}</div>`;
+                    `<div class="error">Ошибка: ${error.message}</div>`;
             });
         });
         
         // Delete claim function
         function deleteClaim(id) {
-            if (confirm("Are you sure you want to delete this claim?")) {
+            if (confirm("Вы уверены, что хотите удалить эту претензию?")) {
                 fetch(`${API_URL}/claims/${id}`, {
                     method: "DELETE",
                     headers: {
@@ -884,10 +987,10 @@
                     return response.json();
                 })
                 .then(data => {
-                    alert("Claim deleted successfully");
+                    alert("Претензия успешно удалена");
                 })
                 .catch(error => {
-                    alert(`Error deleting claim: ${error.message}`);
+                    alert(`Ошибка при удалении претензии: ${error.message}`);
                 });
             }
         }
@@ -928,10 +1031,20 @@
                 loadClients();
             })
             .catch(error => {
-                console.error('API Connection Error:', error);
-                alert(`Cannot connect to API at ${API_URL}/clients\nError: ${error.message}\n\nPlease make sure the server is running.`);
+                console.error('Ошибка подключения к API:', error);
+                alert(`Не удается подключиться к API по адресу ${API_URL}/clients\nОшибка: ${error.message}\n\nПожалуйста, убедитесь, что сервер запущен.`);
             });
         });
+
+        // Функция для перевода статуса претензии
+        function translateClaimStatus(status) {
+            const statusMap = {
+                'pending': 'На рассмотрении',
+                'approved': 'Одобрено',
+                'rejected': 'Отклонено'
+            };
+            return statusMap[status] || status;
+        }
     </script>
 </body>
 </html>

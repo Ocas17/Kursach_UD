@@ -3,6 +3,8 @@ package handler
 import (
 	"github.com/Ocas17/Kursach_UD/internal/service"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/cors"
+	"time"
 )
 
 type Handler struct {
@@ -16,8 +18,17 @@ func NewHandler(services *service.Service) *Handler {
 func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
 
-	// Add CORS middleware
-	router.Use(h.corsMiddleware)
+	// 1. Переместите CORS middleware выше ВСЕГО остального
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"}, // Разрешить все домены
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
+	
+	// 2. Статические файлы тоже будут обработаны middleware
 	router.Static("/front", "./front")
 
 	api := router.Group("/api")
@@ -59,19 +70,4 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	}
 
 	return router
-}
-
-// CORS middleware
-func (h *Handler) corsMiddleware(c *gin.Context) {
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Credentials", "true")
-	c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-	c.Header("Access-Control-Allow-Headers", "Origin, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-
-	if c.Request.Method == "OPTIONS" {
-		c.AbortWithStatus(200)
-		return
-	}
-
-	c.Next()
 }
